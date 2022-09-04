@@ -3,7 +3,6 @@
 #
 
 # ACTIONS #
-from questions import quiz
 
 
 def you_died(why):
@@ -183,6 +182,31 @@ def print_dictionary():
         for key in ques_answer:
             print(key + ':', ques_answer[key])
 
+quiz = {
+    1:
+        {"question": "What can bring back the dead; make you cry, make you laugh, make you young; is born in an "
+                     "instant, yet lasts a "
+                     "lifetime.", "answer": "Memory"},
+    2: {
+        "question": "This thing all things devour: birds, beasts, trees, flowers; gnaws iron, bites steel; grinds "
+                    "hard stones to the "
+                    "meal.", "answer": "Time"},
+    3: {
+        "question": "Some try to hide, some try to cheat; but time will show, we always will meet. Try as you might "
+                    "to guess my name.",
+        "answer":
+            "Death"},
+    4: {
+        "question": "As small as your thumb, I am light in the air. You may hear me before you see me, but trust that "
+                    "I'm here.",
+        "answer":
+            "Hummingbird"},
+    5: {
+        "question": "I'm alive, but without breath; I'm as cold in life as in death; I'm never thirsty, though I "
+                    "always drink.",
+        "answer": "Fish"}
+}
+
 
 def quiz_intro_message():
     """
@@ -196,7 +220,6 @@ def quiz_intro_message():
     return True
 
 
-quiz_intro = quiz_intro_message()
 while True:
     score = 0
     for question in quiz:
@@ -238,7 +261,7 @@ def blue_door_room():
         "door")
 
     # Ask player what to do.
-    action = input("What do you do? > ")
+    action = input("What do you do? Left or right? > ")
 
     # This is a way to see if the text typed by player is in the list
     if action.lower() in ["treasure", "chest", "left"]:
