@@ -1,3 +1,5 @@
+def quiz():
+
 quiz = {
     1:
         {"question": "What can bring back the dead; make you cry, make you laugh, make you young; is born in an "

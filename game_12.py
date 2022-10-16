@@ -163,24 +163,13 @@ def quiz_master():
             elif action == "answer":
                 print("You are wary of the man, but you are smart and like a gamble.")
                 print("You say, 'Ask your questions demon. You do not scare me!")
-                quiz_intro_message()
+                quiz()
             elif action == "attack":
-                you_died(
+                print(you_died(
                     "The man was lightening quick!"
                     "His razor sharp teeth were in your neck before you could blink."
-                    "You feel the life seeping from your body. \n<GAME OVER>")
+                    "You feel the life seeping from your body. \n<GAME OVER."))
 
-
-def quiz_intro_message():
-    """
-    Introduces user to the quiz and rules, and takes an input from customer to start the quiz.
-    Returns true regardless of any key pressed.
-    """
-    print("In my lair you'll answer me. \nThese 5 questions and you'll see?")
-    print("Count your chances, 1 , 2, 3. ")
-    print("If you fail, your blood feeds me.")
-    input("Press Enter to start the trial! ")
-    return True
 
 
 # END CHARACTERS #
@@ -195,7 +184,7 @@ def blue_door_room():
     - Treasure chest: show its contents; option to take treasure or ignore it (proceeds to guard)
     - Guard: After checking treasure chest, ignoring treasure chest to check guard, it calls guard() function
     """
-    # So our treasure_chest list contains 6 items.
+    # So, our treasure_chest list contains 6 items.
     treasure_chest = ["diamonds", "gold", "crown", "sword", "cork", "chalice"]
     print(
         "You see a room with a wooden treasure chest on the left, and a sleeping guard on the right in front of the "
@@ -204,8 +193,8 @@ def blue_door_room():
     # Ask player what to do.
     action = input("What do you do? Left or right? > ")
 
-    # This is a way to see if the text typed by player is in the list
-    if action.lower() in ["treasure", "chest", "left"]:
+    # This is a way to see if the text typed by the player is in the list
+    if action.lower() in ["treasure", "chest", "left", "l"]:
         print("Ooh, treasure!")
         print("Open it? Press '1'")
         print("Leave it alone. Press '2'")
@@ -232,25 +221,38 @@ def blue_door_room():
             treasure_choice = input("> ")
             if treasure_choice == "1":
                 treasure_chest.remove("sword")
-                print("\tYou take the shinier sword from the treasure chest. It does looks exceedingly shiny.")
-                print("\tWoohoo! Bounty and a shiny new sword. /drops your crappy sword in the empty treasure chest.")
-
-                backpack = treasure_chest[:]
-                treasure_contents = ", ".join(treasure_chest)
-                print(f"\tYou also receive {treasure_contents}.")
-                # Removing all the rest of the items in the treasure chest
-                for treasure in backpack:
-                    # Use list remove() function to remove each item in the chest.
-                    treasure_chest.remove(treasure)
-                # Add the old sword in place of the new sword
+                backpack.append("sword")
+                print("\t Your crappy sword is dull and rusty. You decide that it would be wise to take the new one.")
+                print("\t You take the shinier sword from the treasure chest. It does look exceedingly shiny.")
+                print("\t Woohoo! Bounty and a shiny new sword. /drops your crappy sword in the empty treasure chest.")
+                print("\t You try to take all the loot, but it won't fit.")
+                print("\t Your backpack is pretty small, and you can only fit 3 more items.")
+                print("\t Which items should you take?")
+                print(f"There is still {treasure_chest} in the chest.")
                 treasure_chest.append("crappy sword")
-                print(f"\tYou close the lid of the chest containing {treasure_chest} for the next adventurer. /grins")
-                print("Now onward to get past this sleeping guard and the door to freedom.")
+                while len(backpack) <= 4:
+                    item = input("Enter item : ")
+                    treasure_chest.remove(item)
+                    backpack.append(item)
+                    print(f"You have placed {item} in your backpack")
+                    print(f"There is still {treasure_chest} in the chest.")
+                    print(f"You have {backpack} in your backpack")
+                    if len(backpack) == 4:
+                        print("Do you want to check the guard, go back the way you came or move on?")
+                        action = input("What do you do? Check guard, move back or move on? > ")
+                        if action.lower() in ["check guard", "guard", "g"]:
+                            guard()
+                        elif action.lower() in ["move back", "back", "b"]:
+                            start_adventure()
+                        elif action.lower() in ["move on", "on", "forward"]:
+                            quiz_room()
+
+
             elif treasure_choice == "2":
                 print("It will still be here (I hope), right after I get past this guard")
         elif choice == "2":
             print("Who needs treasure, let's get out of here.'")
-    elif action.lower() in ["guard", "right", "r"]:
+    elif action.lower() in ["guard", "right","r"]:
         print("Let's have fun with the guard.")
     else:
         print("Well, not sure what you picked there, let's poke the guard cos it's fun!")
@@ -368,6 +370,90 @@ def quiz_room():
         print("You can do this!")
         print("Let's go in!")
         quiz_master()
+
+def quiz():
+
+    riddles = {
+        1:
+            {"question": "What can bring back the dead; make you cry, make you laugh, make you young; is born in an "
+                         "instant, yet lasts a "
+                         "lifetime.", "answer": "Memory"},
+        2: {
+            "question": "This thing all things devour: birds, beasts, trees, flowers; gnaws iron, bites steel; grinds "
+                        "hard stones to the "
+                        "meal.", "answer": "Time"},
+        3: {
+            "question": "Some try to hide, some try to cheat; but time will show, we always will meet. Try as you might "
+                        "to guess my name.",
+            "answer":
+                "Death"},
+        4: {
+            "question": "As small as your thumb, I am light in the air. You may hear me before you see me, but trust that "
+                        "I'm here.",
+            "answer":
+                "Hummingbird"},
+        5: {
+            "question": "I'm alive, but without breath; I'm as cold in life as in death; I'm never thirsty, though I "
+                        "always drink.",
+            "answer": "Fish"}
+    }
+
+
+
+    def check_ans(quest, ans, att, total):
+        """
+        Takes the arguments, and confirms if the answer provided by user is correct.
+        Converts all answers to lower case to make sure the quiz is not case-sensitive.
+        """
+        if riddles[quest]['answer'].lower() == ans.lower():
+            print(f"Correct Answer! \nYour score is {total + 1}!")
+            return True
+        else:
+            print(f"Wrong Answer :( \nYou have {att - 1} left! \nTry again...")
+            return False
+
+
+    #def print_dictionary():
+        #for question_id, ques_answer in riddles.items():
+            #for key in ques_answer:
+                #print(key + ':', ques_answer[key])
+
+
+    def quiz_intro_message():
+        """
+        Introduces user to the quiz and rules, and takes an input from customer to start the quiz.
+        Returns true regardless of any key pressed.
+        """
+        print("In my lair you'll answer me. \nThese 5 questions and you'll see?")
+        print("Count your chances, 1 , 2, 3. ")
+        print("If you fail, your blood feeds me.")
+        input("Press Enter to start the trial! ")
+        return True
+
+
+    # python project.py
+    intro_message()
+    while True:
+        score = 0
+        for question in riddles:
+            attempts = 3
+            while attempts > 0:
+                print(riddles[question]['question'])
+                answer = input("Enter Answer : ")
+                check = check_ans(question, answer, attempts, score)
+                if check:
+                    score += 1
+                    break
+                attempts -= 1
+        if score < 5:
+            print("You have failed your mission and now I will devour you!")
+            print(" This is the last thing that you ever heard.")
+            break
+        else:
+            print(f"Your final score is {score}!\n\n")
+            print("You have bested me. Your wisdom is boundless. Pass in peace.")
+            print("You must be on your way. Where will you go? Forward there is a door, or back the way you came?")
+
 
 
 # END ROOMS #
